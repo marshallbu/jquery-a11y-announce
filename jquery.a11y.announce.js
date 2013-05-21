@@ -1,27 +1,36 @@
 /**
  * Unobtrusive Announce Method, formed into a more syntax correct jQuery
  * plugin.
- * Code taking from Bryan Garaventa's (WhatSock.com) of the same name as
- * part of the AccDC library.
-
+ * Code taken from Bryan Garaventa's (WhatSock.com) of the same name, as
+ * part of the AccDC library he developed.
+ * 
+ * Author: @marshallbu
+ *
  */
 
 ;(function($, window, document, undefined) {
-  // check to see if the a11y namespace already exists
+  // check to see if the a11y namespace already exists, then create or
+  // extend it
   var a11y = window.a11y ? window.a11y : window.a11y = {};
 
+  // announce function, that will take in either a string or a DOM Element
+  // Node and announce it's text
   a11y.announce = function(obj, loop, noRep) {
     var str = obj;
 
+    // extract text if passed DOM Element Node
     if (str && str.nodeName && str.nodeType === 1) {
       str = $(str).text();
     }
 
+    // push onto messages queue if not looping last message
     if (!loop) {
       a11y.announce.ext.alertMsgs.push(str);
     }
 
+    // announce next message
     if ((a11y.announce.ext.alertMsgs.length === 1 || loop)) {
+      // determine how much time to leave message in aria-live placeholder
       var timeLength = a11y.announce.defaultOptions.baseDelay + (a11y.announce.defaultOptions.iterate(a11y.announce.ext.alertMsgs[0],
         /\s|\,|\.|\:|\;|\!|\(|\)|\/|\?|\@|\#|\$|\%|\^|\&|\*|\\|\-|\_|\+|\=/g) * a11y.announce.defaultOptions.charMultiplier);
 
@@ -60,6 +69,7 @@
     }
   };
 
+  // TODO: allow for option controls?
   // a11y.announce.setOptions = function(options) {
   //   a11y.announce.options = $.extend({}, a11y.announce.defaultOptions, options);
   // };
