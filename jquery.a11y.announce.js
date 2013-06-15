@@ -15,7 +15,20 @@
 
   // announce function, that will take in either a string or a DOM Element
   // Node and announce it's text
-  a11y.announce = function(obj, loop, noRep) {
+  // take in an 'options' object with properties message, loop, noRep
+  // message can be a string or a DOM Element Node
+  a11y.announce = function(opts) {
+    var self = this;
+    console.log(self);
+    var options = opts || {};
+    options.type = opts.type || 'polite';
+
+    //TODO: make it optional to just pass in a string instead of an options object
+
+    var obj = options.message;
+    var loop = options.loop;
+    var noRep = options.noRep;
+
     var str = obj;
 
     // extract text if passed DOM Element Node
@@ -25,36 +38,50 @@
 
     // push onto messages queue if not looping last message
     if (!loop) {
-      a11y.announce.ext.alertMsgs.push(str);
+      a11y.announce.queues[options.type].alertMsgs.push(str);
     }
 
     // announce next message
-    if ((a11y.announce.ext.alertMsgs.length === 1 || loop)) {
+    if (options.type === 'polite' && (a11y.announce.queues[options.type].alertMsgs.length === 1 || loop) ) {
       // determine how much time to leave message in aria-live placeholder
-      var timeLength = a11y.announce.defaultOptions.baseDelay + (a11y.announce.defaultOptions.iterate(a11y.announce.ext.alertMsgs[0],
+      var timeLength = a11y.announce.defaultOptions.baseDelay + (a11y.announce.defaultOptions.iterate(a11y.announce.queues[options.type].alertMsgs[0],
         /\s|\,|\.|\:|\;|\!|\(|\)|\/|\?|\@|\#|\$|\%|\^|\&|\*|\\|\-|\_|\+|\=/g) * a11y.announce.defaultOptions.charMultiplier);
 
-      if (!(noRep && a11y.announce.ext.lastMsg === a11y.announce.ext.alertMsgs[0])) {
-        a11y.announce.ext.lastMsg = a11y.announce.ext.alertMsgs[0];
-        a11y.announce.ext.placeHolder.innerHTML = a11y.announce.ext.alertMsgs[0]; // Must use innerHTML
+      if (!(noRep && a11y.announce.queues[options.type].lastMsg === a11y.announce.queues[options.type].alertMsgs[0])) {
+        a11y.announce.queues[options.type].lastMsg = a11y.announce.queues[options.type].alertMsgs[0];
+        a11y.announce.placeHolder[options.type].innerHTML = a11y.announce.queues[options.type].alertMsgs[0]; // Must use innerHTML
       }
 
       a11y.announce.alertTimeOut = setTimeout(function(){
-        a11y.announce.ext.placeHolder.innerHTML = '';
-        a11y.announce.ext.alertMsgs.shift();
+        a11y.announce.placeHolder[options.type].innerHTML = '';
+        a11y.announce.queues[options.type].alertMsgs.shift();
 
-        if (a11y.announce.ext.alertMsgs.length >= 1) {
-          a11y.announce(a11y.announce.ext.alertMsgs[0], true);
+        if (a11y.announce.queues[options.type].alertMsgs.length >= 1) {
+          a11y.announce({'message': a11y.announce.queues[options.type].alertMsgs[0], 'loop': true, 'type': options.type});
         }
       }, timeLength);
+    } else {
+      // since assertive means DO IT NOW and interrupt, just stuff it in
+      // the assertive placeHolder
+      
+
+      a11y.announce.placeHolder[options.type].innerHTML = str;
     }
+
+
 
     return obj;
   };
 
-  a11y.announce.ext = {
-    alertMsgs: [],
-    lastMsg: ''
+  a11y.announce.queues = {
+    'polite': {
+      alertMsgs: [],
+      lastMsg: ''
+    },
+    'assertive': {
+      alertMsgs: [],
+      lastMsg: ''
+    }
   };
 
   a11y.announce.defaultOptions = {
@@ -75,22 +102,55 @@
   // };
 
   $(function () {
-    if (!a11y.announce.ext.placeHolder) {
-      a11y.announce.ext.placeHolder = $('<span></span>')
-        .attr({ 'aria-live': 'polite', 'aria-atomic': 'false' })
-        .css({
-          position: 'absolute',
-          clip: 'rect(1px, 1px, 1px, 1px)',
-          padding: 0,
-          border: 0,
-          height: '1px',
-          width: '1px',
-          overflow: 'hidden',
-          zIndex: -1000
-        }).get(0);
+    a11y.announce.placeHolder = a11y.announce.placeHolder || {};
 
-        $('body').append(a11y.announce.ext.placeHolder);
-    }
+    a11y.announce.placeHolder.polite = function () {
+      var element = a11y.announce.placeHolder.polite;
+
+      if (typeof element === 'undefined') {
+        element = $('<span></span>')
+          .attr({ 'role': 'region', 'aria-live': 'polite', 'aria-atomic': 'false' })
+          .css({
+            position: 'absolute',
+            clip: 'rect(1px, 1px, 1px, 1px)',
+            padding: 0,
+            border: 0,
+            height: '1px',
+            width: '1px',
+            overflow: 'hidden',
+            zIndex: -1000
+          }).get(0);
+
+        $('body').append(element);
+        return element;
+      }
+      return element;
+    }();
+
+    a11y.announce.placeHolder.assertive = function () {
+      var element = a11y.announce.placeHolder.assertive;
+
+      if (typeof element === 'undefined') {
+        element = $('<span></span>')
+          .attr({ 'role': 'alert', 'aria-live': 'assertive', 'aria-atomic': 'false' })
+          .css({
+            position: 'absolute',
+            clip: 'rect(1px, 1px, 1px, 1px)',
+            padding: 0,
+            border: 0,
+            height: '1px',
+            width: '1px',
+            overflow: 'hidden',
+            zIndex: -1000
+          }).get(0);
+
+        $('body').append(element);
+        return element;
+      }
+      return element;
+    }();
+
+
   });
 
 })(jQuery, window, document);

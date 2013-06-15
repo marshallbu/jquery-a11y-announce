@@ -12,19 +12,34 @@
   <script type="text/javascript">
     
     $(document).ready(function() {
-      $("form input[type='submit']").click(function() {
+      $("button.b1").click(function(e) {
+        e.preventDefault();
         // console.log('blah');
-        str = this.form.content.value;
-        console.log(a11y);
-        console.log(a11y.announce);
-        // a11y.announce(str);
+        var str = $('textarea.test-text').val();
+        // console.log(a11y);
+        // console.log(a11y.announce);
+        
+        a11y.announce({'message': str});
+        console.log(a11y.announce.queues.polite.alertMsgs);
 
-        a11y.announce('come on son');
-        a11y.announce('yippy');
-        a11y.announce('the football score is awesome');
-        a11y.announce('slam dunk!');
-        a11y.announce('hurray for accessibility');
+        // a11y.announce('come on son');
+        // a11y.announce('yippy');
+        // a11y.announce('the football score is awesome');
+        // a11y.announce('slam dunk!');
+        // a11y.announce('hurray for accessibility');
 
+
+        return false;
+      });
+
+      $("button.b2").click(function(e) {
+        e.preventDefault();
+        // console.log('blah');
+        str = $('textarea.test-text').val();
+        // console.log(a11y);
+        // console.log(a11y.announce);
+        a11y.announce({'message': str, 'type': 'assertive'});
+        console.log(a11y.announce.queues.assertive.alertMsgs);
 
         return false;
       });
@@ -34,12 +49,13 @@
 </head>
 <body>
   <h1>Announce A11Y jQuery Plugin</h1>
-  <form>
-      <textarea name="content"></textarea>
+
+      <textarea class="test-text"></textarea>
       <div>
-        <input type="submit" value="Speak"/>
+        <button type="button" class="b1"> Speak Politely</button>
+        <br/>
+        <button type="button" class="b2"> Speak Assertively</button>
       </div>
-  </form>
   <div id="content"></div>
 </body>
 </html>
