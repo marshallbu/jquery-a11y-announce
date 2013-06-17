@@ -13,10 +13,15 @@
   // extend it
   var a11y = window.a11y ? window.a11y : window.a11y = {};
 
-  // announce function, that will take in either a string or a DOM Element
-  // Node and announce it's text
-  // take in an 'options' object with properties message, loop, noRep
-  // message can be a string or a DOM Element Node
+  /* announce function, that will take in either a string or a DOM Element
+   * Node and announce it's text
+   *
+   * @param {String|Object} opts String message or options object
+   * @param {String} opts.message String message
+   * @param {String} opts.type Type of announcement, default polite (polite or assertive) 
+   * @param {Boolean} opts.loop Loop last message, defaults false
+   *
+   */
   a11y.announce = function(opts) {
     var options = {};
     var obj, loop, noRep;
@@ -27,6 +32,7 @@
       options.message = opts;
       options.type = 'polite';
     } else {
+      // assume they passed in a options object
       options.message = opts.message;
       options.type = opts.type || 'polite';
     }
@@ -43,7 +49,7 @@
     }
 
     // push onto messages queue if not looping last message
-    if (!loop) {
+    if (!loop && options.type === 'polite') {
       a11y.announce.queues[options.type].alertMsgs.push(str);
     }
 
