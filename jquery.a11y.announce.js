@@ -18,19 +18,22 @@
   // take in an 'options' object with properties message, loop, noRep
   // message can be a string or a DOM Element Node
   a11y.announce = function(opts) {
-    var options = opts || {};
-    options.type = opts.type || 'polite';
-
+    var options = {};
+    var obj, loop, noRep;
+    
     // make it optional to just pass in a string instead of an options object
     // will default to a polite announcement
-    if (typeof options === 'string') {
-      var temp = options.slice(0);
-      options = { message: temp };
+    if (typeof opts === 'string') {
+      options.message = opts;
+      options.type = 'polite';
+    } else {
+      options.message = opts.message;
+      options.type = opts.type || 'polite';
     }
 
-    var obj = options.message;
-    var loop = options.loop;
-    var noRep = options.noRep;
+    obj = options.message;
+    loop = options.loop || false;
+    noRep = options.noRep || false;
 
     var str = obj;
 
