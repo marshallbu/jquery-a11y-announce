@@ -291,7 +291,7 @@
 			"file": "jquery.a11y.announce.js",
 			"settings":
 			{
-				"buffer_size": 4785,
+				"buffer_size": 4889,
 				"line_ending": "Unix"
 			}
 		},
@@ -300,6 +300,14 @@
 			"settings":
 			{
 				"buffer_size": 1728,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "README.md",
+			"settings":
+			{
+				"buffer_size": 42,
 				"line_ending": "Unix"
 			}
 		}
@@ -656,7 +664,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -664,15 +672,15 @@
 					"file": "jquery.a11y.announce.js",
 					"settings":
 					{
-						"buffer_size": 4785,
+						"buffer_size": 4889,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2679,
-								2679
+								723,
+								723
 							]
 						],
 						"settings":
@@ -682,7 +690,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 364.0,
+						"translation.y": 1506.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -711,6 +719,32 @@
 						},
 						"translation.x": 0.0,
 						"translation.y": 120.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "README.md",
+					"settings":
+					{
+						"buffer_size": 42,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Markdown/Markdown.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
