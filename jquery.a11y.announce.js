@@ -18,12 +18,15 @@
   // take in an 'options' object with properties message, loop, noRep
   // message can be a string or a DOM Element Node
   a11y.announce = function(opts) {
-    var self = this;
-    console.log(self);
     var options = opts || {};
     options.type = opts.type || 'polite';
 
-    //TODO: make it optional to just pass in a string instead of an options object
+    // make it optional to just pass in a string instead of an options object
+    // will default to a polite announcement
+    if (typeof options === 'string') {
+      var temp = options.slice(0);
+      options = { message: temp };
+    }
 
     var obj = options.message;
     var loop = options.loop;
@@ -63,7 +66,6 @@
     } else {
       // since assertive means DO IT NOW and interrupt, just stuff it in
       // the assertive placeHolder
-      
 
       a11y.announce.placeHolder[options.type].innerHTML = str;
     }
