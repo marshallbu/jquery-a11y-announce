@@ -75,9 +75,17 @@
     } else {
       // since assertive means DO IT NOW and interrupt, just stuff it in
       // the assertive placeHolder
-      // a11y.announce.placeHolder[options.type].innerHTML = '';
 
-      a11y.announce.placeHolder[options.type].innerHTML = str;
+      if (a11y.announce.queues[options.type].lastMsg !== str) {
+        a11y.announce.queues[options.type].lastMsg = str;
+        a11y.announce.placeHolder[options.type].innerHTML = str;
+      } else {
+        // salt the text to force it to be read, since ARIA won't read 
+        // "changes" that are the same
+        a11y.announce.queues[options.type].lastMsg = str + '&nbsp;';
+        a11y.announce.placeHolder[options.type].innerHTML = str + '&nbsp;';
+      }
+
     }
 
     return obj;
@@ -142,7 +150,7 @@
 
       if (typeof element === 'undefined') {
         element = $('<span></span>')
-          .attr({ 'role': 'alert', 'aria-live': 'assertive', 'aria-atomic': 'true' })
+          .attr({ 'role': 'alert', 'aria-live': 'assertive', 'aria-atomic': 'false' })
           .css({
             position: 'absolute',
             clip: 'rect(1px, 1px, 1px, 1px)',
