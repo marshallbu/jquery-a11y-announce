@@ -127,7 +127,7 @@
 
       if (typeof element === 'undefined') {
         element = $('<span></span>')
-          .attr({ 'role': 'status', 'aria-live': 'polite', 'aria-atomic': 'false' })
+          .attr({ 'role': 'status', 'aria-live': 'polite' })
           .css({
             position: 'absolute',
             clip: 'rect(1px, 1px, 1px, 1px)',
@@ -150,7 +150,7 @@
 
       if (typeof element === 'undefined') {
         element = $('<span></span>')
-          .attr({ 'role': 'alert', 'aria-live': 'assertive', 'aria-atomic': 'false' })
+          .attr({ 'role': 'alert', 'aria-live': 'assertive' })
           .css({
             position: 'absolute',
             clip: 'rect(1px, 1px, 1px, 1px)',
